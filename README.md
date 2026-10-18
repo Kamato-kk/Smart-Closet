@@ -12,8 +12,8 @@ Smart Closet 是一款以 **HTML、CSS、JavaScript** 開發的互動式智慧�
 
 ## 🌐 線上體驗
 
-- **GitHub Pages：** [請填入部署後的網站網址]((https://github.com/Kamato-kk/Smart-Closet))
-- **GitHub Repository：** [請填入專案網址](https://github.com/Kamato-kk/Smart-Closet)
+- **GitHub Pages：** [請填入部署後的網站網址](([https://github.com/Kamato-kk/Smart-Closet)](https://kamato-kk.github.io/Smart-Closet/))
+- **GitHub Repository：** [請填入專案網址]([https://github.com/Kamato-kk/Smart-Closet](https://kamato-kk.github.io/Smart-Closet/))
 
 
 ## ✨ 主要功能
