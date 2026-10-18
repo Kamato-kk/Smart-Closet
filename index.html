@@ -1,0 +1,2259 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8f6f1" />
+    <title>Smart Closet｜智慧穿搭助手</title>
+    <style>
+      :root {
+        --bg: #f8f6f1;
+        --paper: #fff;
+        --ink: #242522;
+        --muted: #777971;
+        --line: #e7e5de;
+        --accent: #777b68;
+        --soft: #eaece4;
+        --danger: #a64d44;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family:
+          system-ui,
+          -apple-system,
+          "Noto Sans TC",
+          sans-serif;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .bar {
+        max-width: 1160px;
+        margin: auto;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .brand {
+        font-family: Georgia, serif;
+        font-size: 25px;
+        letter-spacing: 0.3px;
+      }
+      .brand small {
+        font: 11px system-ui;
+        color: var(--muted);
+        display: block;
+        letter-spacing: 2px;
+      }
+      .tabs {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+      .tab {
+        border: 0;
+        background: transparent;
+        padding: 10px 14px;
+        border-radius: 30px;
+        color: #60625a;
+      }
+      .tab.active {
+        background: var(--ink);
+        color: white;
+      }
+      main {
+        max-width: 1160px;
+        margin: 30px auto;
+        padding: 0 22px 70px;
+      }
+      .hero {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 26px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .hero h1 {
+        font:
+          clamp(29px, 4vw, 45px) Georgia,
+          serif;
+        margin: 10px 0;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .panel {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 23px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-bottom: 15px;
+      }
+      .field label {
+        font-size: 13px;
+        font-weight: 650;
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid #d9d9d2;
+        border-radius: 11px;
+        padding: 11px 12px;
+        background: #fff;
+        color: var(--ink);
+      }
+      .field textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+      .btn {
+        border: 1px solid var(--ink);
+        border-radius: 11px;
+        background: var(--ink);
+        color: #fff;
+        padding: 11px 17px;
+        font-weight: 600;
+      }
+      .btn.secondary {
+        background: #fff;
+        color: var(--ink);
+      }
+      .btn.soft {
+        background: var(--soft);
+        color: var(--ink);
+        border-color: var(--soft);
+      }
+      .btn.danger {
+        color: var(--danger);
+        background: #fff;
+        border-color: #e7cbc7;
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .between {
+        justify-content: space-between;
+      }
+      .section-title {
+        font-size: 22px;
+        margin: 0 0 18px;
+        font-family: Georgia, serif;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        overflow: hidden;
+      }
+      .photo {
+        width: 100%;
+        aspect-ratio: 4/4;
+        object-fit: contain;
+        background: #f1f0eb;
+      }
+      .card-body {
+        padding: 14px;
+      }
+      .tag {
+        font-size: 11px;
+        background: #eeefe9;
+        border-radius: 20px;
+        padding: 5px 9px;
+        color: #4d5447;
+        display: inline-block;
+        margin: 3px 4px 3px 0;
+      }
+      .color-dot {
+        flex-shrink: 0;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid #c9c9c9;
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      .color-palette {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 6px 0;
+      }
+      .color-palette .palette-chip,
+      .outfit-items .item .palette-chip {
+        display: inline-flex;
+        align-items: center;
+        font-size: 11px;
+      }
+      .outfit-items .item .color-dot {
+        display: inline-block;
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .preview {
+        width: 100%;
+        max-height: 250px;
+        object-fit: contain;
+        background: #f1f0eb;
+        border-radius: 14px;
+      }
+      #editorStage {
+        position: relative;
+        margin: 12px 0;
+        overflow: hidden;
+      }
+      #imagePreview {
+        display: block;
+        width: 100%;
+        height: auto;
+        background-color: #fff;
+        background-image: conic-gradient(
+          #ddd 25%,
+          transparent 0 50%,
+          #ddd 0 75%,
+          transparent 0
+        );
+        background-size: 20px 20px;
+      }
+      #imagePreview.erasing {
+        cursor: crosshair;
+        touch-action: none;
+      }
+      #imagePreview.brushing {
+        cursor: none;
+      }
+      #imagePreview:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: -3px;
+      }
+      #editorOverlay {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      #brushCursor {
+        position: absolute;
+        border: 1px solid white;
+        outline: 1px solid #242522;
+        border-radius: 50%;
+        background: #ffffff30;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+      #brushSample {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+      }
+      #brushSample span {
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+        background: var(--soft);
+      }
+      #brushSize {
+        flex: 1;
+        min-width: 100px;
+      }
+      #photoEditor .row {
+        margin-bottom: 12px;
+      }
+      .outfit-items {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+      }
+      .outfit-items img {
+        width: 100%;
+        height: 140px;
+        object-fit: contain;
+        background: #f3f2ee;
+        border-radius: 12px;
+      }
+      .outfit-items .item {
+        font-size: 12px;
+        text-align: center;
+      }
+      .score {
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .mannequin {
+        height: 380px;
+        position: relative;
+        max-width: 260px;
+        margin: auto;
+        background: linear-gradient(180deg, #f7f6f3, #e9e7df);
+        border-radius: 120px 120px 28px 28px;
+        overflow: hidden;
+      }
+      .mannequin:before {
+        content: "";
+        position: absolute;
+        left: calc(50% - 22px);
+        top: 12px;
+        width: 44px;
+        height: 52px;
+        border-radius: 50%;
+        background: #d4d1c9;
+      }
+      .mannequin:after {
+        content: "";
+        position: absolute;
+        left: calc(50% - 9px);
+        top: 57px;
+        width: 18px;
+        height: 26px;
+        background: #d4d1c9;
+      }
+      .mannequin img {
+        position: absolute;
+        object-fit: contain;
+        filter: drop-shadow(0 3px 4px #0002);
+        z-index: 2;
+      }
+      .mannequin .top {
+        top: 76px;
+        left: 17%;
+        width: 66%;
+        height: 128px;
+      }
+      .mannequin .bottom {
+        top: 195px;
+        left: 25%;
+        width: 50%;
+        height: 130px;
+      }
+      .mannequin .shoes {
+        bottom: 3px;
+        left: 26%;
+        width: 48%;
+        height: 55px;
+      }
+      .mannequin .outer {
+        top: 73px;
+        left: 6%;
+        width: 88%;
+        height: 160px;
+        z-index: 3;
+      }
+      .outfit-preview {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 110px;
+        gap: 12px;
+        align-items: center;
+      }
+      .outer-preview {
+        margin: 0;
+        text-align: center;
+        font-size: 12px;
+      }
+      .outer-preview img {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        background: var(--bg);
+        border-radius: 12px;
+      }
+      .outfit-reasons {
+        padding-left: 22px;
+        line-height: 1.8;
+        margin-bottom: 0;
+      }
+      .outfit-reasons li + li {
+        margin-top: 8px;
+      }
+      .outfit-items .item span {
+        display: block;
+      }
+      .outfit-items .item small {
+        display: block;
+        color: var(--muted);
+        margin: 4px 0 8px;
+      }
+      @media (max-width: 400px) {
+        .outfit-preview {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .outer-preview img {
+          max-width: 120px;
+        }
+      }
+      .empty {
+        padding: 35px;
+        text-align: center;
+        border: 1px dashed #cccac2;
+        border-radius: 15px;
+        color: var(--muted);
+      }
+      .stat {
+        font-size: 32px;
+        font-weight: 700;
+      }
+      .notice {
+        padding: 12px 14px;
+        background: #f1f2eb;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .weather {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      #toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #242522;
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px 17px;
+        max-width: 360px;
+        z-index: 30;
+        box-shadow: 0 6px 22px #0002;
+        display: none;
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 20px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      @media (max-width: 760px) {
+        .bar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .two {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .tabs {
+          width: 100%;
+        }
+        .tab {
+          flex: 1;
+          padding: 9px 8px;
+          font-size: 12px;
+        }
+      }
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .panel {
+          padding: 17px;
+        }
+        .weather {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="bar">
+        <div class="brand">
+          Smart Closet<small>YOUR PERSONAL WARDROBE</small>
+        </div>
+        <nav class="tabs" aria-label="主要導覽">
+          <button class="tab active" data-tab="home">總覽</button
+          ><button class="tab" data-tab="closet">我的衣櫃</button
+          ><button class="tab" data-tab="stylist">穿搭推薦</button
+          ><button class="tab" data-tab="saved">我的收藏</button>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <section id="home">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">CURATE YOUR EVERYDAY</div>
+            <h1>每天穿搭，從容開始。</h1>
+            <p class="muted">
+              建立自己的數位衣櫃，讓每一件衣服都有新的搭配可能。
+            </p>
+          </div>
+          <button class="btn" data-go="closet">＋ 新增衣服</button>
+        </div>
+        <div class="grid" style="margin-bottom: 22px">
+          <div class="panel">
+            <div class="muted">衣櫃單品</div>
+            <div class="stat" id="countClothes">0</div>
+          </div>
+          <div class="panel">
+            <div class="muted">收藏搭配</div>
+            <div class="stat" id="countSaved">0</div>
+          </div>
+          <div class="panel">
+            <div class="muted">目前天氣設定</div>
+            <div class="stat" style="font-size: 19px" id="homeWeather">
+              25°C · 晴天
+            </div>
+          </div>
+        </div>
+        <div class="two">
+          <div class="panel">
+            <h2 class="section-title">今日穿搭靈感</h2>
+            <p class="muted">
+              告訴我們你的行程、喜歡的風格，就能從衣櫃挑出適合的搭配。
+            </p>
+            <button class="btn" data-go="stylist">開始搭配 →</button>
+          </div>
+          <div class="panel">
+            <h2 class="section-title">使用流程</h2>
+            <p>01　上傳衣服照片並確認分類</p>
+            <p>02　設定天氣與想去的場合</p>
+            <p>03　取得搭配、預覽並收藏</p>
+          </div>
+        </div>
+      </section>
+      <section id="closet" class="hidden">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">MY WARDROBE</div>
+            <h1>我的數位衣櫃</h1>
+          </div>
+        </div>
+        <div class="two">
+          <div class="panel">
+            <h2 class="section-title" id="editTitle">新增一件衣服</h2>
+            <form id="clothForm">
+              <div class="field">
+                <label for="clothImage">衣服照片（建議單件、背景簡單）</label
+                ><input id="clothImage" type="file" accept="image/*" /><small
+                  class="hint"
+                  >照片在本機處理，不會上傳。自動去背適合單件、背景單純且與衣服顏色不同的照片；人物、衣架與複雜背景請用擦除工具修整。</small
+                >
+              </div>
+              <label class="hint"
+                ><input id="autoCutout" type="checkbox" checked />
+                上傳後自動去除背景</label
+              >
+              <div id="photoEditor" class="hidden">
+                <div id="editorStage">
+                  <canvas
+                    id="imagePreview"
+                    tabindex="0"
+                    aria-label="衣服去背預覽，使用筆刷或選取工具修整；Escape 取消選取，Delete 擦除選取範圍"
+                  ></canvas>
+                  <canvas id="editorOverlay" aria-hidden="true"></canvas>
+                  <span
+                    id="brushCursor"
+                    class="hidden"
+                    aria-hidden="true"
+                  ></span>
+                </div>
+                <div class="row">
+                  <button type="button" class="btn soft" id="removeBackground">
+                    重新自動去背
+                  </button>
+                  <button type="button" class="btn secondary" id="restorePhoto">
+                    還原原圖
+                  </button>
+                  <button
+                    type="button"
+                    class="btn secondary"
+                    id="undoPhoto"
+                    disabled
+                  >
+                    復原上一步
+                  </button>
+                  <button
+                    type="button"
+                    class="btn secondary"
+                    id="redoPhoto"
+                    disabled
+                  >
+                    重做
+                  </button>
+                </div>
+                <div class="field">
+                  <label for="cutoutTolerance"
+                    >去背強度 <output id="toleranceValue">35</output></label
+                  >
+                  <input
+                    id="cutoutTolerance"
+                    type="range"
+                    min="10"
+                    max="100"
+                    value="35"
+                  />
+                  <small class="hint"
+                    >背景殘留可提高強度；衣服被擦掉請降低強度再重新去背。重新去背會以原圖開始。</small
+                  >
+                </div>
+                <div class="field">
+                  <label for="editTool">手動修整工具</label>
+                  <select id="editTool">
+                    <option value="view">檢視圖片</option>
+                    <option value="brush">擦除筆刷</option>
+                    <option value="rectangle">矩形選取</option>
+                    <option value="lasso">自由套索選取</option>
+                  </select>
+                </div>
+                <div class="row" id="brushControls">
+                  <label class="hint" for="brushSize"
+                    >筆刷直徑 <output id="brushSizeValue">30 px</output></label
+                  >
+                  <input
+                    id="brushSize"
+                    type="range"
+                    min="1"
+                    max="150"
+                    value="30"
+                  />
+                  <span id="brushSample" aria-hidden="true"><span></span></span>
+                </div>
+                <div class="row">
+                  <button
+                    type="button"
+                    class="btn danger"
+                    id="eraseSelection"
+                    disabled
+                  >
+                    擦除選取範圍
+                  </button>
+                  <button
+                    type="button"
+                    class="btn secondary"
+                    id="cancelSelection"
+                    disabled
+                  >
+                    取消選取
+                  </button>
+                  <span class="hint" id="selectionInfo" role="status"
+                    >尚未選取範圍</span
+                  >
+                </div>
+                <p class="hint">
+                  筆刷：圓圈顯示實際擦除範圍，大小以畫面像素計。矩形／套索：拖曳選取後按「擦除選取範圍」，框線內才會被擦掉。按
+                  Esc 取消選取；圖片取得焦點時可用 Ctrl／⌘ Z 復原、Shift Z
+                  重做。最多保留 15 步。
+                </p>
+                <p
+                  class="hint"
+                  id="photoStatus"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+                <p class="hint">
+                  棋盤格代表透明背景。確認只留下衣服後，按「儲存衣服」。
+                </p>
+              </div>
+              <div class="field">
+                <label for="clothName">名稱 *</label
+                ><input
+                  id="clothName"
+                  maxlength="45"
+                  required
+                  placeholder="例如：白色短袖襯衫"
+                />
+              </div>
+              <div class="weather">
+                <div class="field">
+                  <label for="clothCategory">分類 *</label
+                  ><select id="clothCategory">
+                    <option value="top">上衣</option>
+                    <option value="bottom">下身</option>
+                    <option value="outer">外套</option>
+                    <option value="shoes">鞋子</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="clothStyle">風格</label
+                  ><select id="clothStyle">
+                    <option value="casual">休閒</option>
+                    <option value="formal">正式</option>
+                    <option value="sport">運動</option>
+                    <option value="street">街頭</option>
+                  </select>
+                </div>
+              </div>
+              <div class="weather">
+                <div class="field">
+                  <label for="clothColor">主要顏色（面積最大的顏色）</label
+                  ><input type="color" id="clothColor" value="#b0b0a8" />
+                  <small class="hint" id="primaryColorValue">#b0b0a8</small>
+                </div>
+                <div class="field">
+                  <label for="clothWarmth">保暖程度</label
+                  ><select id="clothWarmth">
+                    <option value="1">薄款／夏季</option>
+                    <option value="2" selected>一般／四季</option>
+                    <option value="3">厚款／冬季</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="newClothColor"
+                  >其他顏色（每件最多 5 色，含主色）</label
+                >
+                <div id="additionalColors"></div>
+                <div class="row">
+                  <input
+                    type="color"
+                    id="newClothColor"
+                    value="#ffffff"
+                    aria-label="要新增的副色"
+                    style="width: 64px; height: 42px; padding: 4px"
+                  />
+                  <button type="button" class="btn soft" id="addClothColor">
+                    加入副色
+                  </button>
+                  <button
+                    type="button"
+                    class="btn secondary"
+                    id="detectClothColors"
+                  >
+                    重新分析照片顏色
+                  </button>
+                </div>
+                <small class="hint"
+                  >照片會推測最多 5
+                  個常見顏色，透明背景不計入。條紋、格紋及拼色都可保留多色；背景、陰影也可能影響結果，請確認後儲存。手動修改後，擦除照片不會覆蓋你選的顏色。</small
+                >
+              </div>
+              <div class="row">
+                <button class="btn" type="submit" id="saveCloth">
+                  儲存衣服</button
+                ><button
+                  class="btn secondary hidden"
+                  type="button"
+                  id="cancelEdit"
+                >
+                  取消編輯
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
+            <h2 class="section-title">衣櫃清單</h2>
+            <div class="field">
+              <label for="filterCategory">分類篩選</label
+              ><select id="filterCategory">
+                <option value="all">全部單品</option>
+                <option value="top">上衣</option>
+                <option value="bottom">下身</option>
+                <option value="outer">外套</option>
+                <option value="shoes">鞋子</option>
+              </select>
+            </div>
+            <div
+              id="closetList"
+              class="grid"
+              style="grid-template-columns: repeat(2, minmax(0, 1fr))"
+            ></div>
+          </div>
+        </div>
+      </section>
+      <section id="stylist" class="hidden">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">YOUR PERSONAL STYLIST</div>
+            <h1>找到今天的好搭配</h1>
+          </div>
+        </div>
+        <div class="two">
+          <div class="panel">
+            <h2 class="section-title">穿搭需求</h2>
+            <div class="field">
+              <label for="prompt">用文字告訴我你想怎麼穿</label
+              ><textarea
+                id="prompt"
+                placeholder="例如：明天約會想穿休閒一點，天氣有點冷，想要黑白簡約風"
+              ></textarea
+              ><small class="hint"
+                >可辨識：約會、上班、面試、運動、休閒、正式、街頭、冷、熱、下雨，以及常見顏色關鍵字。</small
+              >
+            </div>
+            <div class="weather">
+              <div class="field">
+                <label for="occasion">場合</label
+                ><select id="occasion">
+                  <option value="daily">日常</option>
+                  <option value="date">約會</option>
+                  <option value="work">上班／面試</option>
+                  <option value="sport">運動</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="preferredStyle">喜歡的風格</label
+                ><select id="preferredStyle">
+                  <option value="any">不限</option>
+                  <option value="casual">休閒</option>
+                  <option value="formal">正式</option>
+                  <option value="sport">運動</option>
+                  <option value="street">街頭</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="outerMode">外套搭配</label>
+              <select id="outerMode">
+                <option value="include">有外套就加入（預設）</option>
+                <option value="auto">依天氣決定</option>
+                <option value="exclude">不加入外套</option>
+              </select>
+              <small class="hint"
+                >也可以輸入「加外套」或「不要外套」。天氣較熱時會優先挑薄外套，作為冷氣房或傍晚備用。</small
+              >
+            </div>
+            <h3>天氣設定</h3>
+            <div class="weather">
+              <div class="field">
+                <label for="temp">溫度（°C）</label
+                ><input type="number" id="temp" min="-20" max="50" value="25" />
+              </div>
+              <div class="field">
+                <label for="condition">天氣</label
+                ><select id="condition">
+                  <option value="sun">晴天</option>
+                  <option value="cloud">陰天</option>
+                  <option value="rain">雨天</option>
+                  <option value="snow">雪天</option>
+                </select>
+              </div>
+            </div>
+            <div class="row" style="margin-bottom: 14px">
+              <button type="button" class="btn secondary" id="getWeather">
+                使用定位取得即時天氣</button
+              ><span id="weatherSource" class="hint">目前為手動天氣</span>
+            </div>
+            <button class="btn" id="generate">產生穿搭建議 ✨</button>
+            <p class="hint">
+              即時天氣需要網路、定位權限及安全連線（HTTPS）；無法取得時可繼續使用手動設定。
+            </p>
+          </div>
+          <div class="panel">
+            <h2 class="section-title">推薦結果</h2>
+            <div id="recommendation" class="empty">
+              先新增至少一件上衣、一件下身與一雙鞋，再按「產生穿搭建議」。
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="saved" class="hidden">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">FAVORITES</div>
+            <h1>我的收藏搭配</h1>
+          </div>
+        </div>
+        <div id="savedList" class="grid"></div>
+      </section>
+    </main>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <footer>
+      Smart Closet · 規則式穿搭建議僅供參考 · 衣服照片預設只儲存在本機瀏覽器
+    </footer>
+    <script>
+      "use strict";
+      // 照片編輯：透明 PNG、邊緣連通去背與手動擦除。
+      let originalPhoto = null;
+      let undoPixels = null;
+      let photoVersion = 0;
+      let photoBusy = false;
+      let activePointer = null;
+      let previousPoint = null;
+      const undoHistory = [],
+        redoHistory = [];
+      let selection = null;
+      let drawingTool = null;
+      let hoverPoint = null;
+      let strokePixels = null;
+      let extraColors = [];
+      let paletteManual = false;
+      const $ = (id) => document.getElementById(id),
+        cats = { top: "上衣", bottom: "下身", outer: "外套", shoes: "鞋子" },
+        styles = {
+          casual: "休閒",
+          formal: "正式",
+          sport: "運動",
+          street: "街頭",
+        },
+        conds = { sun: "晴天", cloud: "陰天", rain: "雨天", snow: "雪天" };
+      let db,
+        clothes = [],
+        favorites = [],
+        editing = null,
+        pendingImage = null,
+        lastOutfit = null;
+      function toast(message) {
+        const el = $("toast");
+        el.textContent = message;
+        el.style.display = "block";
+        clearTimeout(toast.t);
+        toast.t = setTimeout(() => (el.style.display = "none"), 3600);
+      }
+      function safe(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function openDB() {
+        return new Promise((resolve, reject) => {
+          const r = indexedDB.open("smart-closet-db", 1);
+          r.onupgradeneeded = () => {
+            const d = r.result;
+            d.createObjectStore("clothes", { keyPath: "id" });
+            d.createObjectStore("favorites", { keyPath: "id" });
+          };
+          r.onsuccess = () => resolve(r.result);
+          r.onerror = () => reject(r.error);
+        });
+      }
+      function transaction(store, mode = "readonly") {
+        return db.transaction(store, mode).objectStore(store);
+      }
+      function all(store) {
+        return new Promise((resolve, reject) => {
+          const r = transaction(store).getAll();
+          r.onsuccess = () => resolve(r.result);
+          r.onerror = () => reject(r.error);
+        });
+      }
+      function put(store, obj) {
+        return new Promise((resolve, reject) => {
+          const r = transaction(store, "readwrite").put(obj);
+          r.onsuccess = resolve;
+          r.onerror = () => reject(r.error);
+        });
+      }
+      function remove(store, id) {
+        return new Promise((resolve, reject) => {
+          const r = transaction(store, "readwrite").delete(id);
+          r.onsuccess = resolve;
+          r.onerror = () => reject(r.error);
+        });
+      }
+      async function reload() {
+        clothes = await all("clothes");
+        favorites = await all("favorites");
+        $("countClothes").textContent = clothes.length;
+        $("countSaved").textContent = favorites.length;
+        renderCloset();
+        renderSaved();
+      }
+      function showTab(name) {
+        document
+          .querySelectorAll("main>section")
+          .forEach((e) => e.classList.toggle("hidden", e.id !== name));
+        document
+          .querySelectorAll("[data-tab]")
+          .forEach((e) => e.classList.toggle("active", e.dataset.tab === name));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      document
+        .querySelectorAll("[data-tab]")
+        .forEach((b) =>
+          b.addEventListener("click", () => showTab(b.dataset.tab)),
+        );
+      document
+        .querySelectorAll("[data-go]")
+        .forEach((b) =>
+          b.addEventListener("click", () => showTab(b.dataset.go)),
+        );
+      async function photoProcess(file) {
+        if (!file.type.startsWith("image/")) throw Error("請選擇圖片檔案");
+        if (file.size > 15 * 1024 * 1024) throw Error("圖片不可超過 15 MB");
+        const url = URL.createObjectURL(file);
+        try {
+          const image = await loadImage(url);
+          const canvas = document.createElement("canvas");
+          const scale = Math.min(1, 700 / Math.max(image.width, image.height));
+          canvas.width = Math.max(1, Math.round(image.width * scale));
+          canvas.height = Math.max(1, Math.round(image.height * scale));
+          canvas
+            .getContext("2d")
+            .drawImage(image, 0, 0, canvas.width, canvas.height);
+          return { data: canvas.toDataURL("image/png") };
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      }
+      $("clothImage").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const version = ++photoVersion;
+        photoBusy = true;
+        $("saveCloth").disabled = true;
+        try {
+          const r = await photoProcess(file);
+          if (version !== photoVersion) return;
+          await loadPhoto(r.data, r.data, version);
+          if (version !== photoVersion) return;
+          if ($("autoCutout").checked) autoRemoveBackground();
+          toast("照片已載入，請確認去背結果及主要顏色後儲存");
+        } catch (err) {
+          if (version !== photoVersion) return;
+          toast(err.message);
+          e.target.value = "";
+        } finally {
+          if (version === photoVersion) {
+            photoBusy = false;
+            $("saveCloth").disabled = !db;
+          }
+        }
+      });
+
+      function renderPaletteEditor() {
+        $("primaryColorValue").textContent = $("clothColor").value;
+        $("additionalColors").innerHTML = extraColors
+          .map(
+            (color, i) => `
+          <div class="row" style="margin-bottom:8px">
+            <input type="color" value="${color}" data-palette-index="${i}" aria-label="副色 ${i + 1}" style="width:54px;height:38px;padding:3px">
+            <span>${color}</span>
+            <button type="button" class="btn soft" data-primary-color="${i}">設為主色</button>
+            <button type="button" class="btn secondary" data-remove-color="${i}">移除</button>
+          </div>`,
+          )
+          .join("");
+        $("addClothColor").disabled = extraColors.length >= 4;
+      }
+
+      function setPalette(colors, manual = false) {
+        const normalized = itemColors({ colors, color: colors[0] });
+        $("clothColor").value = normalized[0];
+        extraColors = normalized.slice(1);
+        paletteManual = manual;
+        renderPaletteEditor();
+      }
+      $("clothColor").oninput = () => {
+        paletteManual = true;
+        extraColors = extraColors.filter(
+          (color) => color !== $("clothColor").value,
+        );
+        renderPaletteEditor();
+      };
+      $("addClothColor").onclick = () => {
+        const color = $("newClothColor").value;
+        if (extraColors.length >= 4) return toast("每件衣服最多保留 5 種顏色");
+        if ([$("clothColor").value, ...extraColors].includes(color))
+          return toast("這個顏色已經加入了");
+        extraColors.push(color);
+        paletteManual = true;
+        renderPaletteEditor();
+      };
+      $("additionalColors").onchange = (event) => {
+        const index = Number(event.target.dataset.paletteIndex);
+        if (
+          !Number.isInteger(index) ||
+          index < 0 ||
+          index >= extraColors.length
+        )
+          return;
+        const colors = [$("clothColor").value, ...extraColors];
+        colors[index + 1] = event.target.value;
+        setPalette(colors, true);
+      };
+      $("additionalColors").onclick = (event) => {
+        const remove = event.target.closest("[data-remove-color]");
+        const primary = event.target.closest("[data-primary-color]");
+        if (!remove && !primary) return;
+        const index = Number(
+          remove ? remove.dataset.removeColor : primary.dataset.primaryColor,
+        );
+        if (
+          !Number.isInteger(index) ||
+          index < 0 ||
+          index >= extraColors.length
+        )
+          return;
+        const colors = [$("clothColor").value, ...extraColors];
+        if (remove) colors.splice(index + 1, 1);
+        else [colors[0], colors[index + 1]] = [colors[index + 1], colors[0]];
+        setPalette(colors, true);
+      };
+      $("detectClothColors").onclick = () => {
+        if (!pendingImage || photoBusy || activePointer !== null)
+          return toast("請先載入照片並完成目前操作");
+        const canvas = $("imagePreview");
+        const colors = extractPalette(
+          canvas
+            .getContext("2d")
+            .getImageData(0, 0, canvas.width, canvas.height).data,
+        );
+        if (!colors.length) return toast("圖片已完全透明，請先還原或復原照片");
+        setPalette(colors);
+        toast("已重新推測照片配色，請確認主色及副色");
+      };
+
+      function loadImage(source) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.onerror = () => reject(Error("無法載入照片，請重新選取圖片"));
+          image.src = source;
+        });
+      }
+
+      async function loadPhoto(source, current, version) {
+        const [original, image] = await Promise.all([
+          loadImage(source),
+          loadImage(current),
+        ]);
+        if (version !== photoVersion) return;
+        originalPhoto = original;
+        paletteManual = false;
+        const canvas = $("imagePreview");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        resetPhotoTools();
+        $("photoEditor").classList.remove("hidden");
+        $("photoStatus").textContent = "照片已載入，可自動去背或手動修整。";
+        syncPhoto();
+      }
+
+      // 將相近色分群，避免把黑白條紋平均成單一灰色。
+      function extractPalette(pixels, maxColors = 5) {
+        const bins = new Map();
+        let total = 0;
+        for (let i = 0; i < pixels.length; i += 4) {
+          if (pixels[i + 3] < 160) continue;
+          const key =
+            (pixels[i] >> 5) * 64 +
+            (pixels[i + 1] >> 5) * 8 +
+            (pixels[i + 2] >> 5);
+          const bin = bins.get(key) || { count: 0, rgb: [0, 0, 0] };
+          bin.count++;
+          total++;
+          for (let c = 0; c < 3; c++) bin.rgb[c] += pixels[i + c];
+          bins.set(key, bin);
+        }
+        const groups = [];
+        for (const bin of [...bins.values()].sort(
+          (a, b) => b.count - a.count,
+        )) {
+          const color = bin.rgb.map((v) => v / bin.count);
+          let closest = null,
+            bestDistance = 55;
+          for (const group of groups) {
+            const distance = Math.hypot(
+              ...color.map((v, c) => v - group.rgb[c] / group.count),
+            );
+            if (distance < bestDistance) {
+              bestDistance = distance;
+              closest = group;
+            }
+          }
+          if (closest) {
+            closest.count += bin.count;
+            for (let c = 0; c < 3; c++) closest.rgb[c] += bin.rgb[c];
+          } else groups.push({ count: bin.count, rgb: [...bin.rgb] });
+        }
+        const ranked = groups.sort((a, b) => b.count - a.count);
+        const frequent = ranked.filter((g) => g.count >= total * 0.05);
+        return (frequent.length ? frequent : ranked).slice(0, maxColors).map(
+          (g) =>
+            "#" +
+            g.rgb
+              .map((v) =>
+                Math.round(v / g.count)
+                  .toString(16)
+                  .padStart(2, "0"),
+              )
+              .join(""),
+        );
+      }
+
+      function syncPhoto() {
+        const canvas = $("imagePreview");
+        pendingImage = canvas.toDataURL("image/png");
+        const pixels = canvas
+          .getContext("2d")
+          .getImageData(0, 0, canvas.width, canvas.height).data;
+        if (!paletteManual) {
+          const colors = extractPalette(pixels);
+          if (colors.length) setPalette(colors);
+        }
+      }
+
+      function rememberPhoto() {
+        const canvas = $("imagePreview");
+        undoPixels = canvas
+          .getContext("2d")
+          .getImageData(0, 0, canvas.width, canvas.height);
+        recordPhotoStep(undoPixels);
+      }
+
+      function recordPhotoStep(pixels) {
+        undoHistory.push(pixels);
+        if (undoHistory.length > 15) undoHistory.shift();
+        redoHistory.length = 0;
+        updateHistoryButtons();
+      }
+
+      // 只移除與圖片外緣相連、顏色接近主要背景色的像素。
+      // 不做衣物語意辨識，因此人物、封閉孔洞可用筆刷修整。
+      function removeEdgeBackground(image, tolerance) {
+        const { width, height, data } = image;
+        const bins = new Map();
+        const edge = [];
+        for (let x = 0; x < width; x++) edge.push(x, (height - 1) * width + x);
+        for (let y = 1; y < height - 1; y++)
+          edge.push(y * width, y * width + width - 1);
+        for (const pixel of edge) {
+          const i = pixel * 4;
+          if (data[i + 3] < 160) continue;
+          const key = `${data[i] >> 4},${data[i + 1] >> 4},${data[i + 2] >> 4}`;
+          const bin = bins.get(key) || { count: 0, rgb: [0, 0, 0] };
+          bin.count++;
+          for (let c = 0; c < 3; c++) bin.rgb[c] += data[i + c];
+          bins.set(key, bin);
+        }
+        const dominant = [...bins.values()].sort(
+          (a, b) => b.count - a.count,
+        )[0];
+        if (!dominant) return 0;
+        const background = dominant.rgb.map((v) => v / dominant.count);
+        const visited = new Uint8Array(width * height);
+        const queue = new Int32Array(width * height);
+        let head = 0,
+          tail = 0,
+          removed = 0;
+        function visit(pixel) {
+          if (visited[pixel]) return;
+          visited[pixel] = 1;
+          const i = pixel * 4;
+          const distance = Math.hypot(
+            data[i] - background[0],
+            data[i + 1] - background[1],
+            data[i + 2] - background[2],
+          );
+          if (data[i + 3] < 16 || distance <= tolerance) queue[tail++] = pixel;
+        }
+        edge.forEach(visit);
+        while (head < tail) {
+          const pixel = queue[head++];
+          if (data[pixel * 4 + 3] !== 0) removed++;
+          data[pixel * 4 + 3] = 0;
+          const x = pixel % width;
+          if (x > 0) visit(pixel - 1);
+          if (x < width - 1) visit(pixel + 1);
+          if (pixel >= width) visit(pixel - width);
+          if (pixel < width * (height - 1)) visit(pixel + width);
+        }
+        return removed;
+      }
+
+      function autoRemoveBackground() {
+        if (!originalPhoto || activePointer !== null) return;
+        clearSelection();
+        rememberPhoto();
+        const canvas = $("imagePreview");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(originalPhoto, 0, 0, canvas.width, canvas.height);
+        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const removed = removeEdgeBackground(
+          pixels,
+          Number($("cutoutTolerance").value),
+        );
+        const visible = pixels.data.some(
+          (value, i) => i % 4 === 3 && value > 0,
+        );
+        if (!visible) {
+          ctx.putImageData(undoPixels, 0, 0);
+          $("photoStatus").textContent =
+            "衣服與背景可能太相近，已保留前一步；請降低強度或手動擦除。";
+        } else {
+          ctx.putImageData(pixels, 0, 0);
+          $("photoStatus").textContent = removed
+            ? "已去除外緣背景，請確認衣服完整；殘留雜物可手動擦除，誤刪可復原。"
+            : "未找到可移除的外緣背景，請手動擦除或調整強度。";
+        }
+        syncPhoto();
+      }
+
+      $("removeBackground").onclick = () => {
+        if (!photoBusy) autoRemoveBackground();
+      };
+      $("cutoutTolerance").oninput = () => {
+        $("toleranceValue").textContent = $("cutoutTolerance").value;
+      };
+      $("restorePhoto").onclick = () => {
+        if (!originalPhoto || activePointer !== null || photoBusy) return;
+        clearSelection();
+        rememberPhoto();
+        const canvas = $("imagePreview");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(originalPhoto, 0, 0, canvas.width, canvas.height);
+        syncPhoto();
+        $("photoStatus").textContent = "已還原原圖。";
+      };
+      $("undoPhoto").onclick = () => {
+        travelHistory(undoHistory, redoHistory, "已復原上一步。");
+      };
+      $("redoPhoto").onclick = () => {
+        travelHistory(redoHistory, undoHistory, "已重做。");
+      };
+      function updateHistoryButtons() {
+        $("undoPhoto").disabled = undoHistory.length === 0;
+        $("redoPhoto").disabled = redoHistory.length === 0;
+      }
+
+      function travelHistory(from, to, message) {
+        if (!from.length || activePointer !== null || photoBusy) return;
+        const canvas = $("imagePreview"),
+          ctx = canvas.getContext("2d");
+        to.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (to.length > 15) to.shift();
+        ctx.putImageData(from.pop(), 0, 0);
+        clearSelection();
+        updateHistoryButtons();
+        syncPhoto();
+        $("photoStatus").textContent = message;
+      }
+
+      function resetPhotoTools() {
+        activePointer = null;
+        drawingTool = null;
+        previousPoint = null;
+        hoverPoint = null;
+        strokePixels = null;
+        undoPixels = null;
+        undoHistory.length = 0;
+        redoHistory.length = 0;
+        $("editTool").value = "view";
+        const canvas = $("imagePreview"),
+          overlay = $("editorOverlay");
+        overlay.width = canvas.width;
+        overlay.height = canvas.height;
+        clearSelection();
+        updateHistoryButtons();
+        updateTool();
+      }
+
+      function photoPoint(event, clamp = true) {
+        const canvas = $("imagePreview");
+        const rect = canvas.getBoundingClientRect();
+        let x = ((event.clientX - rect.left) * canvas.width) / rect.width;
+        let y = ((event.clientY - rect.top) * canvas.height) / rect.height;
+        if (clamp) {
+          x = Math.max(0, Math.min(canvas.width, x));
+          y = Math.max(0, Math.min(canvas.height, y));
+        }
+        return { x, y };
+      }
+
+      function updateBrushPreview(event) {
+        const canvas = $("imagePreview"),
+          rect = canvas.getBoundingClientRect();
+        const cursor = $("brushCursor");
+        if (event)
+          hoverPoint = {
+            x: ((event.clientX - rect.left) * canvas.width) / rect.width,
+            y: ((event.clientY - rect.top) * canvas.height) / rect.height,
+          };
+        const size = Number($("brushSize").value);
+        $("brushSizeValue").textContent = `${size} px`;
+        const sample = $("brushSample").firstElementChild;
+        sample.style.width = sample.style.height = `${Math.min(size, 50)}px`;
+        const inside =
+          hoverPoint &&
+          hoverPoint.x >= 0 &&
+          hoverPoint.y >= 0 &&
+          hoverPoint.x <= canvas.width &&
+          hoverPoint.y <= canvas.height;
+        cursor.classList.toggle(
+          "hidden",
+          $("editTool").value !== "brush" || !inside || photoBusy,
+        );
+        cursor.style.width = cursor.style.height = `${size}px`;
+        if (hoverPoint) {
+          cursor.style.left = `${(hoverPoint.x / canvas.width) * 100}%`;
+          cursor.style.top = `${(hoverPoint.y / canvas.height) * 100}%`;
+        }
+      }
+
+      function updateTool() {
+        const tool = $("editTool").value;
+        const canvas = $("imagePreview");
+        canvas.classList.toggle("erasing", tool !== "view");
+        canvas.classList.toggle("brushing", tool === "brush");
+        $("brushSize").disabled = tool !== "brush";
+        updateBrushPreview();
+      }
+      $("brushSize").oninput = () => updateBrushPreview();
+      $("editTool").onchange = () => {
+        clearSelection();
+        updateTool();
+      };
+
+      function selectionBounds(area) {
+        const xs = area.points.map((p) => p.x),
+          ys = area.points.map((p) => p.y);
+        const x = Math.min(...xs),
+          y = Math.min(...ys);
+        return {
+          x,
+          y,
+          width: Math.max(...xs) - x,
+          height: Math.max(...ys) - y,
+        };
+      }
+
+      function validSelection(area) {
+        if (!area) return false;
+        const bounds = selectionBounds(area);
+        if (bounds.width < 1 || bounds.height < 1) return false;
+        if (area.type === "rectangle") return true;
+        let twiceArea = 0;
+        area.points.forEach((p, i) => {
+          const next = area.points[(i + 1) % area.points.length];
+          twiceArea += p.x * next.y - next.x * p.y;
+        });
+        return Math.abs(twiceArea) >= 2;
+      }
+
+      function traceSelection(ctx, area) {
+        ctx.beginPath();
+        if (area.type === "rectangle") {
+          const bounds = selectionBounds(area);
+          ctx.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+        } else {
+          area.points.forEach((p, i) =>
+            i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y),
+          );
+          ctx.closePath();
+        }
+      }
+
+      function drawSelection() {
+        const overlay = $("editorOverlay"),
+          ctx = overlay.getContext("2d");
+        ctx.clearRect(0, 0, overlay.width, overlay.height);
+        const valid = validSelection(selection);
+        $("eraseSelection").disabled = !valid || activePointer !== null;
+        $("cancelSelection").disabled = !selection;
+        $("selectionInfo").textContent = "尚未選取範圍";
+        if (!selection) return;
+        const scale =
+          overlay.width /
+          ($("imagePreview").getBoundingClientRect().width || overlay.width);
+        ctx.save();
+        traceSelection(ctx, selection);
+        ctx.fillStyle = "rgba(166, 77, 68, 0.18)";
+        ctx.fill("evenodd");
+        ctx.lineWidth = 3 * scale;
+        ctx.strokeStyle = "white";
+        ctx.stroke();
+        ctx.lineWidth = 1.5 * scale;
+        ctx.setLineDash([6 * scale, 4 * scale]);
+        ctx.strokeStyle = "#a64d44";
+        ctx.stroke();
+        ctx.restore();
+        const bounds = selectionBounds(selection);
+        $("selectionInfo").textContent = valid
+          ? `已選取約 ${Math.round(bounds.width)} × ${Math.round(bounds.height)} 圖片像素；按按鈕確認擦除`
+          : "拖曳以選取範圍";
+      }
+
+      function clearSelection() {
+        selection = null;
+        drawSelection();
+      }
+      $("cancelSelection").onclick = () => {
+        if (activePointer === null) clearSelection();
+      };
+      $("eraseSelection").onclick = () => {
+        if (!validSelection(selection) || activePointer !== null || photoBusy)
+          return;
+        rememberPhoto();
+        const ctx = $("imagePreview").getContext("2d");
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-out";
+        traceSelection(ctx, selection);
+        ctx.fill("evenodd");
+        ctx.restore();
+        clearSelection();
+        syncPhoto();
+        $("photoStatus").textContent = "已擦除選取範圍，可復原或繼續修整。";
+      };
+
+      function eraseAt(event) {
+        const canvas = $("imagePreview");
+        const rect = canvas.getBoundingClientRect();
+        const point = photoPoint(event, false);
+        const ctx = canvas.getContext("2d");
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.lineWidth =
+          (Number($("brushSize").value) * canvas.width) / rect.width;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(previousPoint?.x ?? point.x, previousPoint?.y ?? point.y);
+        ctx.lineTo(point.x, point.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, ctx.lineWidth / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        previousPoint = point;
+      }
+      $("imagePreview").onpointerdown = (event) => {
+        const tool = $("editTool").value;
+        if (
+          tool === "view" ||
+          photoBusy ||
+          activePointer !== null ||
+          event.button !== 0
+        )
+          return;
+        event.preventDefault();
+        $("imagePreview").focus({ preventScroll: true });
+        clearSelection();
+        activePointer = event.pointerId;
+        drawingTool = tool;
+        previousPoint = null;
+        $("imagePreview").setPointerCapture(event.pointerId);
+        if (tool === "brush") {
+          const canvas = $("imagePreview");
+          strokePixels = canvas
+            .getContext("2d")
+            .getImageData(0, 0, canvas.width, canvas.height);
+          eraseAt(event);
+        } else {
+          const point = photoPoint(event);
+          selection = { type: tool, points: [point, point] };
+          drawSelection();
+        }
+        updateBrushPreview(event);
+      };
+      $("imagePreview").onpointermove = (event) => {
+        updateBrushPreview(event);
+        if (activePointer !== event.pointerId) return;
+        if (drawingTool === "brush") eraseAt(event);
+        else if (selection) {
+          const point = photoPoint(event);
+          if (drawingTool === "rectangle") selection.points[1] = point;
+          else {
+            const last = selection.points[selection.points.length - 1];
+            if (Math.hypot(point.x - last.x, point.y - last.y) >= 1)
+              selection.points.push(point);
+          }
+          drawSelection();
+        }
+      };
+      $("imagePreview").onpointerleave = () => {
+        hoverPoint = null;
+        updateBrushPreview();
+      };
+      function finishErase(event) {
+        if (activePointer !== event.pointerId) return;
+        const canceled = event.type !== "pointerup";
+        const tool = drawingTool;
+        if (!canceled) {
+          if (tool === "brush") eraseAt(event);
+          else if (selection) {
+            const point = photoPoint(event);
+            if (tool === "rectangle") selection.points[1] = point;
+            else selection.points.push(point);
+          }
+        }
+        activePointer = null;
+        drawingTool = null;
+        previousPoint = null;
+        if (tool === "brush") {
+          if (canceled) {
+            $("imagePreview").getContext("2d").putImageData(strokePixels, 0, 0);
+          } else recordPhotoStep(strokePixels);
+          strokePixels = null;
+          syncPhoto();
+          $("photoStatus").textContent = canceled
+            ? "已取消這一筆擦除。"
+            : "已完成筆刷擦除，可復原上一步。";
+        } else if (canceled || !validSelection(selection)) clearSelection();
+        else drawSelection();
+      }
+      $("imagePreview").onpointerup = finishErase;
+      $("imagePreview").onpointercancel = finishErase;
+      $("imagePreview").onlostpointercapture = finishErase;
+      $("imagePreview").onkeydown = (event) => {
+        if (event.key === "Escape" && activePointer !== null) {
+          const pointerId = activePointer;
+          finishErase({ pointerId, type: "pointercancel" });
+          $("imagePreview").releasePointerCapture(pointerId);
+          event.preventDefault();
+          return;
+        }
+        if (activePointer !== null) return;
+        if (event.key === "Escape") {
+          event.preventDefault();
+          clearSelection();
+        }
+        if (
+          (event.key === "Delete" || event.key === "Backspace") &&
+          validSelection(selection)
+        ) {
+          event.preventDefault();
+          $("eraseSelection").click();
+        }
+        if (
+          (event.ctrlKey || event.metaKey) &&
+          event.key.toLowerCase() === "z"
+        ) {
+          event.preventDefault();
+          $(event.shiftKey ? "redoPhoto" : "undoPhoto").click();
+        }
+      };
+      updateTool();
+      $("clothForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (photoBusy) return toast("照片處理中，請稍候");
+        if (activePointer !== null) return toast("請先完成目前的擦除或選取");
+        if (selection) return toast("請先擦除選取範圍，或取消選取後再儲存");
+        const name = $("clothName").value.trim();
+        if (!name) return toast("請輸入衣服名稱");
+        if (!pendingImage) return toast("請先上傳衣服照片");
+        const canvas = $("imagePreview");
+        const pixels = canvas
+          .getContext("2d")
+          .getImageData(0, 0, canvas.width, canvas.height).data;
+        if (!pixels.some((value, i) => i % 4 === 3 && value > 0)) {
+          return toast("照片已完全透明，請復原或還原原圖後再儲存");
+        }
+        const item = {
+          id: editing || crypto.randomUUID(),
+          name,
+          category: $("clothCategory").value,
+          style: $("clothStyle").value,
+          color: $("clothColor").value,
+          colors: itemColors({
+            color: $("clothColor").value,
+            colors: [$("clothColor").value, ...extraColors],
+          }),
+          warmth: Number($("clothWarmth").value),
+          image: pendingImage,
+          sourceImage: originalPhoto?.src || pendingImage,
+          updatedAt: Date.now(),
+        };
+        try {
+          await put("clothes", item);
+          resetForm();
+          await reload();
+          toast("衣服已儲存到此瀏覽器");
+        } catch (err) {
+          toast("儲存失敗，可能是瀏覽器儲存空間不足");
+        }
+      });
+      function resetForm() {
+        photoVersion++;
+        photoBusy = false;
+        activePointer = null;
+        originalPhoto = null;
+        undoPixels = null;
+        editing = null;
+        pendingImage = null;
+        $("clothForm").reset();
+        setPalette(["#b0b0a8"]);
+        resetPhotoTools();
+        updateBrushPreview();
+        $("photoEditor").classList.add("hidden");
+        $("toleranceValue").textContent = "35";
+        $("saveCloth").disabled = !db;
+        $("clothImage").value = "";
+        $("editTitle").textContent = "新增一件衣服";
+        $("cancelEdit").classList.add("hidden");
+      }
+      $("cancelEdit").onclick = resetForm;
+      $("filterCategory").onchange = renderCloset;
+      function renderCloset() {
+        const list = $("closetList"),
+          filter = $("filterCategory").value,
+          items = clothes.filter(
+            (x) => filter === "all" || x.category === filter,
+          );
+        list.innerHTML = items.length
+          ? items
+              .map(
+                (x) =>
+                  `<article class="card"><img class="photo" src="${x.image}" alt="${safe(x.name)}"><div class="card-body"><b>${safe(x.name)}</b><div><span class="tag">${cats[x.category]}</span><span class="tag">${styles[x.style]}</span></div>${paletteHTML(x)}<div class="row"><button class="btn soft" data-edit="${x.id}">編輯</button><button class="btn danger" data-delete="${x.id}">刪除</button></div></div></article>`,
+              )
+              .join("")
+          : '<div class="empty">這個分類還沒有衣服，先上傳第一件吧。</div>';
+      }
+      $("closetList").addEventListener("click", async (e) => {
+        const edit = e.target.closest("[data-edit]"),
+          del = e.target.closest("[data-delete]");
+        if (edit) {
+          const x = clothes.find((i) => i.id === edit.dataset.edit);
+          if (!x) return;
+          editing = x.id;
+          pendingImage = x.image;
+          $("clothName").value = x.name;
+          $("clothCategory").value = x.category;
+          $("clothStyle").value = x.style;
+          setPalette(itemColors(x), true);
+          $("clothWarmth").value = x.warmth;
+          const version = ++photoVersion;
+          photoBusy = true;
+          $("saveCloth").disabled = true;
+          try {
+            await loadPhoto(x.sourceImage || x.image, x.image, version);
+          } catch (err) {
+            if (version === photoVersion) {
+              resetForm();
+              toast(err.message);
+            }
+            return;
+          } finally {
+            if (version === photoVersion) {
+              photoBusy = false;
+              $("saveCloth").disabled = !db;
+            }
+          }
+          if (version !== photoVersion) return;
+          setPalette(itemColors(x), true);
+          $("editTitle").textContent = "編輯衣服";
+          $("cancelEdit").classList.remove("hidden");
+          $("clothForm").scrollIntoView({ behavior: "smooth" });
+        }
+        if (del) {
+          const id = del.dataset.delete;
+          if (!confirm("確定刪除這件衣服？既有收藏將保留圖片快照。")) return;
+          await remove("clothes", id);
+          await reload();
+          toast("已刪除單品");
+        }
+      });
+      function parsePrompt(text) {
+        const t = text.toLowerCase();
+        let occasion = null,
+          style = null,
+          temp = null,
+          condition = null,
+          color = null,
+          outer = null;
+        if (/面試|上班|開會|商務|辦公/.test(t)) occasion = "work";
+        else if (/約會|聚餐|見面/.test(t)) occasion = "date";
+        else if (/運動|跑步|健身/.test(t)) occasion = "sport";
+        if (/正式|商務|優雅/.test(t)) style = "formal";
+        else if (/運動|健身/.test(t)) style = "sport";
+        else if (/街頭|潮流/.test(t)) style = "street";
+        else if (/休閒|輕鬆|簡約/.test(t)) style = "casual";
+        if (/下雨|雨天/.test(t)) condition = "rain";
+        else if (/下雪|雪天/.test(t)) condition = "snow";
+        const degrees = t.match(/(-?\d+(?:\.\d+)?)\s*(?:°\s*c|℃|度)/);
+        if (degrees && Number(degrees[1]) >= -20 && Number(degrees[1]) <= 50)
+          temp = Number(degrees[1]);
+        else if (/冷|保暖|寒流/.test(t)) temp = 12;
+        else if (/涼爽|微涼/.test(t)) temp = 22;
+        else if (/熱|炎熱/.test(t)) temp = 30;
+        if (
+          /不要(?:穿|加|帶)?外套|不想(?:穿|加|帶)?外套|不穿外套|不用外套|不加外套|免外套|不需要外套/.test(
+            t,
+          )
+        )
+          outer = "exclude";
+        else if (/外套/.test(t)) outer = "include";
+        const colors = [
+          ["黑", "#222222"],
+          ["白", "#ffffff"],
+          ["藍", "#486a9a"],
+          ["紅", "#bb4747"],
+          ["綠", "#6c8868"],
+          ["米", "#cfc3a5"],
+          ["灰", "#858585"],
+          ["粉", "#e3a7b8"],
+        ];
+        for (const [word, hex] of colors) {
+          if (t.includes(word)) {
+            color = hex;
+            break;
+          }
+        }
+        return { occasion, style, temp, condition, color, outer };
+      }
+      function rgb(hex) {
+        return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+      }
+      // 保留 color 作為主色，舊版單色資料與收藏可直接繼續使用。
+      function itemColors(item) {
+        const values = [
+          item.color,
+          ...(Array.isArray(item.colors) ? item.colors : []),
+        ];
+        const colors = [
+          ...new Set(
+            values
+              .filter((v) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v))
+              .map((v) => v.toLowerCase()),
+          ),
+        ];
+        return colors.length ? colors.slice(0, 5) : ["#b0b0a8"];
+      }
+      function paletteHTML(item) {
+        return `<div class="color-palette">${itemColors(item)
+          .map(
+            (color, i) =>
+              `<span class="hint palette-chip" title="${i ? "副色" : "主色"} ${color}"><span class="color-dot" style="background:${color}"></span>${i ? "" : "主色 "}${color}</span>`,
+          )
+          .join("")}</div>`;
+      }
+      function paletteDistance(item, color) {
+        return Math.min(
+          ...itemColors(item).map((value) => colorDistance(value, color)),
+        );
+      }
+      function paletteHarmony(a, b) {
+        const left = itemColors(a),
+          right = itemColors(b);
+        const weight = (i, length) =>
+          length === 1 ? 1 : i === 0 ? 0.6 : 0.4 / (length - 1);
+        let score = 0;
+        left.forEach((x, i) =>
+          right.forEach((y, j) => {
+            score +=
+              harmony(x, y) * weight(i, left.length) * weight(j, right.length);
+          }),
+        );
+        return score;
+      }
+      function colorDistance(a, b) {
+        const x = rgb(a),
+          y = rgb(b);
+        return Math.sqrt(x.reduce((s, v, i) => s + (v - y[i]) ** 2, 0));
+      }
+      function harmony(a, b) {
+        const d = colorDistance(a, b);
+        const ca = rgb(a),
+          cb = rgb(b);
+        const chroma = (c) => Math.max(...c) - Math.min(...c);
+        if (chroma(ca) < 35 || chroma(cb) < 35) return 15;
+        if (d < 65) return 13;
+        if (d < 160) return 11;
+        return 7;
+      }
+      function recommend() {
+        const parsed = parsePrompt($("prompt").value),
+          occasion = parsed.occasion || $("occasion").value,
+          style = parsed.style || $("preferredStyle").value,
+          temp = parsed.temp ?? Number($("temp").value),
+          condition = parsed.condition || $("condition").value;
+        if (
+          !Number.isFinite(temp) ||
+          (parsed.temp === null && $("temp").value.trim() === "") ||
+          temp < -20 ||
+          temp > 50
+        ) {
+          toast("請輸入 -20 至 50°C 的有效溫度");
+          return;
+        }
+        const groups = {};
+        for (const cat of Object.keys(cats))
+          groups[cat] = clothes.filter((x) => x.category === cat);
+        if (
+          !groups.top.length ||
+          !groups.bottom.length ||
+          !groups.shoes.length
+        ) {
+          lastOutfit = null;
+          $("recommendation").innerHTML =
+            '<div class="empty">需要至少一件上衣、一件下身和一雙鞋才能組成完整穿搭。</div>';
+          return;
+        }
+        const targetStyle =
+          style === "any"
+            ? occasion === "work"
+              ? "formal"
+              : occasion === "sport"
+                ? "sport"
+                : "casual"
+            : style;
+        const desiredWarmth = temp <= 14 ? 3 : temp >= 28 ? 1 : 2;
+        const outerMode = parsed.outer || $("outerMode").value;
+        const needsOuter =
+          outerMode === "include" ||
+          (outerMode === "auto" &&
+            (temp <= 22 || ["rain", "snow"].includes(condition)));
+        const includeOuter = needsOuter && groups.outer.length > 0;
+        const outerNote =
+          outerMode === "exclude"
+            ? "依照你的設定，這套不加入外套。"
+            : needsOuter && !groups.outer.length
+              ? "衣櫃尚未新增外套，這次先推薦三件單品；請上傳並分類為「外套」後重新產生。"
+              : !needsOuter
+                ? `依天氣模式：目前 ${temp}°C、${conds[condition]}，先不加入外套；想要疊穿可切換「有外套就加入」。`
+                : temp >= 23
+                  ? `目前 ${temp}°C，仍依你的設定加入外套；優先挑薄款，可在冷氣房或傍晚加穿，戶外熱時可脫下。`
+                  : `目前 ${temp}°C、${conds[condition]}，加入外套作為可增減的外層。`;
+        const itemScore = (x) => {
+          let s = 20;
+          s += x.style === targetStyle ? 24 : 0;
+          const warmth =
+            x.category === "outer" && temp >= 23 ? 1 : desiredWarmth;
+          s += 20 - 9 * Math.abs(x.warmth - warmth);
+          if (parsed.color)
+            s += Math.max(0, 15 - paletteDistance(x, parsed.color) / 18);
+          if (condition === "rain" && x.category === "shoes" && x.warmth >= 2)
+            s += 6;
+          if (occasion === "date" && x.style === "casual") s += 3;
+          return s;
+        };
+        let best = null;
+        for (const top of groups.top)
+          for (const bottom of groups.bottom)
+            for (const shoes of groups.shoes) {
+              const base = [top, bottom, shoes],
+                outer = includeOuter
+                  ? groups.outer.reduce((a, b) => {
+                      const rank = (x) =>
+                        itemScore(x) +
+                        (paletteHarmony(x, top) + paletteHarmony(x, bottom)) /
+                          2;
+                      return rank(a) >= rank(b) ? a : b;
+                    })
+                  : null,
+                items = outer ? [...base, outer] : base;
+              const score =
+                items.reduce((s, x) => s + itemScore(x), 0) / items.length +
+                ((paletteHarmony(top, bottom) +
+                  paletteHarmony(bottom, shoes) +
+                  (outer ? paletteHarmony(top, outer) : 0)) *
+                  2) /
+                  (outer ? 3 : 2);
+              if (!best || score > best.score) best = { items, score };
+            }
+        const normalized = Math.round(
+          Math.min(98, Math.max(45, best.score * 0.94)),
+        );
+        lastOutfit = {
+          id: crypto.randomUUID(),
+          items: best.items.map((x) => ({ ...x, colors: [...itemColors(x)] })),
+          score: normalized,
+          occasion,
+          style: targetStyle,
+          temp,
+          condition,
+          outerMode,
+          outerNote,
+          preferredColor: parsed.color,
+          date: new Date().toISOString(),
+        };
+        renderRecommendation(lastOutfit);
+        toast("已從現有衣櫃中挑選搭配");
+      }
+      // 理由依實際選出的單品產生，收藏也沿用該套的天氣與偏好。
+      function explainColorPair(a, b) {
+        const neutral = (hex) => {
+          const channels = rgb(hex);
+          return Math.max(...channels) - Math.min(...channels) < 35;
+        };
+        const names = `「${a.name}」與「${b.name}」`;
+        const left = itemColors(a),
+          right = itemColors(b);
+        const distance = colorDistance(left[0], right[0]);
+        let reason =
+          neutral(left[0]) || neutral(right[0])
+            ? `${names}有低彩度主色作為基底，讓整體顏色較容易協調。`
+            : distance < 65
+              ? `${names}主色接近，可形成連貫的同色系搭配。`
+              : distance < 160
+                ? `${names}主色色差適中，在一致感中保留層次。`
+                : `${names}主色色差較大，偏向對比搭配；想低調一點，可以把其中一件換成低彩度單品。`;
+        if (left.length > 1 || right.length > 1) {
+          const sharedAccent = left.some((x, i) =>
+            right.some((y, j) => (i > 0 || j > 0) && colorDistance(x, y) < 65),
+          );
+          reason += sharedAccent
+            ? "其中的副色與另一件有接近的顏色，可用條紋、圖案或拼色細節互相呼應。"
+            : "這裡也把已記錄的副色納入配色比較；主色仍占較高比重，避免小面積點綴主導整套搭配。";
+        }
+        return reason;
+      }
+
+      function buildOutfitReasons(o) {
+        const reasons = [];
+        const occasionNames = {
+          daily: "日常",
+          date: "約會",
+          work: "上班／面試",
+          sport: "運動",
+        };
+        const target = styles[o.style] || "自選";
+        const matched = o.items.filter((x) => x.style === o.style);
+        reasons.push(
+          `場合與風格：針對${occasionNames[o.occasion] || "日常"}，以${target}風格挑選。${matched.length ? `「${matched.map((x) => x.name).join("」、「")}」符合這個風格。` : "現有單品沒有完全符合的風格，這次以衣櫃中可用的單品組合。"}`,
+        );
+        const otherStyles = o.items.filter((x) => x.style !== o.style);
+        if (matched.length && otherStyles.length)
+          reasons.push(
+            `混搭取捨：「${otherStyles.map((x) => x.name).join("」、「")}」屬於其他風格，這套是兼顧現有衣服、保暖與顏色的混搭選擇。`,
+          );
+        const top = o.items.find((x) => x.category === "top");
+        const bottom = o.items.find((x) => x.category === "bottom");
+        const shoes = o.items.find((x) => x.category === "shoes");
+        const outer = o.items.find((x) => x.category === "outer");
+        if (top && bottom)
+          reasons.push(`上下身配色：${explainColorPair(top, bottom)}`);
+        if (bottom && shoes)
+          reasons.push(`鞋子呼應：${explainColorPair(bottom, shoes)}`);
+        const desiredWarmth = o.temp <= 14 ? 3 : o.temp >= 28 ? 1 : 2;
+        const warmthNames = { 1: "薄款", 2: "一般厚度", 3: "厚款" };
+        const deviations = o.items.filter(
+          (x) =>
+            Number(x.warmth) !==
+            (x.category === "outer" && o.temp >= 23 ? 1 : desiredWarmth),
+        );
+        reasons.push(
+          `氣溫考量：${o.temp}°C 時優先挑${warmthNames[desiredWarmth]}單品。${deviations.length ? deviations.map((x) => `「${x.name}」是${warmthNames[x.warmth] || "未標示厚度"}`).join("、") + "，與目標厚度有差異，請依實際體感增減。" : "這套單品的保暖等級符合目前的挑選條件。"}`,
+        );
+        if (outer) {
+          reasons.push(
+            `外套搭配：「${outer.name}」作為外層，${top ? explainColorPair(top, outer) : "增加疊穿層次。"} ${o.outerNote || "可依體感決定穿上或脫下。"}`,
+          );
+        } else {
+          reasons.push(
+            `外套安排：${o.outerNote || "這套收藏未包含外套；想加入時，可在推薦頁選擇「有外套就加入」後重新產生。"}`,
+          );
+        }
+        if (o.condition === "rain")
+          reasons.push(
+            "雨天建議：記得帶傘；出門前確認鞋底止滑及衣物是否防潑水，目前的分類與保暖等級無法判斷防水性能。",
+          );
+        if (o.condition === "snow")
+          reasons.push(
+            "雪天建議：確認外層保暖與鞋底止滑，並按體感補上保暖內層及配件。",
+          );
+        if (o.preferredColor) {
+          const closest = o.items.reduce((a, b) =>
+            paletteDistance(a, o.preferredColor) <=
+            paletteDistance(b, o.preferredColor)
+              ? a
+              : b,
+          );
+          reasons.push(
+            `顏色偏好：「${closest.name}」的主色或副色最接近你指定的顏色，仍需以實際照片確認。`,
+          );
+        }
+        return reasons;
+      }
+
+      function outfitHTML(o, withSave) {
+        const names = o.items.map((x) => x.name).join("、");
+        const outer = o.items.find((x) => x.category === "outer");
+        const warmthNames = { 1: "薄款", 2: "一般厚度", 3: "厚款" };
+        const cards = o.items
+          .map(
+            (x) => `
+          <div class="item">
+            <img src="${x.image}" alt="${safe(x.name)}">
+            <span>${safe(cats[x.category] || "單品")}｜${safe(x.name)}</span>
+            <small>${safe(styles[x.style] || "自選風格")} · ${warmthNames[x.warmth] || "未標示厚度"}</small>
+            ${paletteHTML(x)}
+          </div>`,
+          )
+          .join("");
+        const previewItems = o.items
+          .map(
+            (x) =>
+              `<img class="${x.category}" src="${x.image}" alt="${safe(cats[x.category])}：${safe(x.name)}">`,
+          )
+          .join("");
+        const reasons = buildOutfitReasons(o)
+          .map((reason) => `<li>${safe(reason)}</li>`)
+          .join("");
+        return `
+          <div class="row between">
+            <div><span class="eyebrow">OUTFIT MATCH</span><div class="score">${o.score}<small style="font-size:14px"> / 100</small></div></div>
+            <span class="tag">${o.temp}°C · ${conds[o.condition]}</span>
+          </div>
+          <p class="hint">搭配：${safe(names)}</p>
+          <div class="outfit-items">${cards}</div>
+          <h3>虛擬人形排列預覽</h3>
+          <div class="${outer ? "outfit-preview" : ""}">
+            <div class="mannequin" style="width:100%" role="img" aria-label="${safe(names)}的服裝排列示意">${previewItems}</div>
+            ${outer ? `<figure class="outer-preview"><img src="${outer.image}" alt="外套單獨預覽：${safe(outer.name)}"><figcaption>本套外套<br>${safe(outer.name)}</figcaption></figure>` : ""}
+          </div>
+          <p class="hint">此為服裝圖片位置示意，會使用儲存時的去背結果，不會模擬真實穿著效果。${outer ? "外套顯示在上衣外層，旁邊另附完整外套預覽。" : "本套未加入外套，原因請見下方說明。"}</p>
+          <div class="notice"><strong>為什麼這樣搭配？</strong><ul class="outfit-reasons">${reasons}</ul></div>
+          <p class="hint">搭配分數為顏色、風格及保暖規則的綜合評分。</p>
+          ${withSave ? '<button class="btn" id="favoriteBtn" style="margin-top:14px">♡ 收藏這套搭配</button>' : ""}`;
+      }
+      function renderRecommendation(o) {
+        $("recommendation").classList.remove("empty");
+        $("recommendation").innerHTML = outfitHTML(o, true);
+      }
+      $("generate").onclick = recommend;
+      $("recommendation").addEventListener("click", async (e) => {
+        if (e.target.id === "favoriteBtn" && lastOutfit) {
+          try {
+            await put("favorites", lastOutfit);
+            await reload();
+            toast("搭配已收藏");
+          } catch (err) {
+            toast("收藏失敗，請檢查儲存空間");
+          }
+        }
+      });
+      function renderSaved() {
+        const list = $("savedList");
+        list.innerHTML = favorites.length
+          ? favorites
+              .slice()
+              .reverse()
+              .map(
+                (o) =>
+                  `<article class="panel"><div class="row between"><b>${new Date(o.date).toLocaleDateString("zh-TW")}</b><button class="btn danger" data-unfavorite="${o.id}">移除</button></div>${outfitHTML(o, false)}</article>`,
+              )
+              .join("")
+          : '<div class="empty">還沒有收藏，前往穿搭推薦建立第一套搭配。</div>';
+      }
+      $("savedList").addEventListener("click", async (e) => {
+        const b = e.target.closest("[data-unfavorite]");
+        if (b) {
+          await remove("favorites", b.dataset.unfavorite);
+          await reload();
+          toast("已移除收藏");
+        }
+      });
+      function updateHomeWeather() {
+        const n = Number($("temp").value);
+        $("homeWeather").textContent =
+          `${Number.isFinite(n) ? n : 25}°C · ${conds[$("condition").value]}`;
+      }
+      $("temp").oninput = updateHomeWeather;
+      $("condition").onchange = updateHomeWeather;
+      $("getWeather").onclick = () => {
+        if (!navigator.geolocation) {
+          toast("瀏覽器不支援定位，請使用手動天氣");
+          return;
+        }
+        const btn = $("getWeather");
+        btn.disabled = true;
+        $("weatherSource").textContent = "正在取得位置與天氣…";
+        navigator.geolocation.getCurrentPosition(
+          async (p) => {
+            try {
+              const { latitude, longitude } = p.coords;
+              const url = `https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(latitude)}&longitude=${encodeURIComponent(longitude)}&current=temperature_2m,weather_code&timezone=auto`;
+              const res = await fetch(url);
+              if (!res.ok) throw Error("天氣服務暫時無法使用");
+              const data = await res.json();
+              const w = data.current;
+              if (!w || !Number.isFinite(w.temperature_2m))
+                throw Error("天氣資料格式錯誤");
+              $("temp").value = Math.round(w.temperature_2m);
+              const code = w.weather_code;
+              $("condition").value = [
+                51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99,
+              ].includes(code)
+                ? "rain"
+                : [71, 73, 75, 77, 85, 86].includes(code)
+                  ? "snow"
+                  : [0, 1].includes(code)
+                    ? "sun"
+                    : "cloud";
+              $("weatherSource").textContent =
+                `即時天氣 · ${new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" })}`;
+              updateHomeWeather();
+              toast("已更新即時天氣（可手動修改）");
+            } catch (err) {
+              $("weatherSource").textContent = "即時天氣失敗，請使用手動設定";
+              toast(err.message);
+            } finally {
+              btn.disabled = false;
+            }
+          },
+          () => {
+            btn.disabled = false;
+            $("weatherSource").textContent = "定位未授權，請使用手動設定";
+            toast("無法取得位置，可使用手動天氣");
+          },
+          { timeout: 12000, maximumAge: 300000 },
+        );
+      };
+      (async () => {
+        try {
+          db = await openDB();
+          await reload();
+          updateHomeWeather();
+        } catch (err) {
+          toast("無法啟用 IndexedDB，請使用一般瀏覽器視窗並允許網站儲存資料");
+          document.querySelectorAll("button").forEach((b) => {
+            if (["saveCloth", "generate"].includes(b.id)) b.disabled = true;
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
